@@ -1,9 +1,14 @@
 import Chart from "@/components/Chart";
+import Dashboard from "@/components/Dashboard";
+import Navbar from "@/components/Navbar";
 
 export default function Home() {
+            // bg-gradient-to-r from-slate-500 to-slate-300
+
     return (
-        <main className="flex min-h-screen flex-col items-center justify-between p-24">
-          <Chart/>
+        <main className="flex-col min-h-screen min-w-screen">
+            <Navbar />
+            <Dashboard />
         </main>
     );
 }

@@ -1,11 +1,12 @@
-import { TickerRequest, TickerResponse } from "@/types";
+import { AggregateRequest, AggregateResponse, TickerRequest, TickerResponse } from "@/types";
 import { formatDate } from "@/utils";
+const baseUrl = "http://localhost:8080/"
+const aggEndpoint = "aggregate";
+const tickerEndpoint = "ticker";
 
-const apiUrl = "http://localhost:8080/stocks/ticker";
-
-export const getTickerData = async (
-    request: TickerRequest
-): Promise<TickerResponse[]> => {
+export const getAggregateData = async (
+    request: AggregateRequest
+): Promise<AggregateResponse[]> => {
     try {
         const queryParams = new URLSearchParams({
             symbol: request.symbol,
@@ -14,7 +15,7 @@ export const getTickerData = async (
             to: request.to,
         });
 
-        const fullUrl = `${apiUrl}?${queryParams.toString()}`;
+        const fullUrl = `${baseUrl + aggEndpoint}?${queryParams.toString()}`;
         const response = await fetch(fullUrl);
 
         if (!response.ok) {
@@ -25,12 +26,37 @@ export const getTickerData = async (
 
         console.log(data);
 
-        const formattedData: TickerResponse[] = data.map((item: any) => ({
+        const formattedData: AggregateResponse[] = data.map((item: any) => ({
             ...item,
             t: formatDate(item.t),
         }));
 
         return formattedData;
+    } catch (error) {
+        console.error("Fetch error:", error);
+        throw error;
+    }
+};
+
+
+export const getTickerData = async (
+    request: TickerRequest
+): Promise<TickerResponse[]> => {
+    try {
+        const queryParams = new URLSearchParams({
+            symbol: request.symbol,
+        });
+
+        const fullUrl = `${baseUrl + tickerEndpoint}?${queryParams.toString()}`;
+        const response = await fetch(fullUrl);
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data: TickerResponse[] = await response.json();
+        console.log(data)
+        return data;
     } catch (error) {
         console.error("Fetch error:", error);
         throw error;
