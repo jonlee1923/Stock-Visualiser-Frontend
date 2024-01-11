@@ -1,6 +1,6 @@
 import { AggregateRequest, AggregateResponse, TickerRequest, TickerResponse } from "@/types";
 import { formatDate } from "@/utils";
-const baseUrl = "http://localhost:8080/"
+const baseUrl = "http://localhost:8080/stocks/"
 const aggEndpoint = "aggregate";
 const tickerEndpoint = "ticker";
 
@@ -48,6 +48,7 @@ export const getTickerData = async (
         });
 
         const fullUrl = `${baseUrl + tickerEndpoint}?${queryParams.toString()}`;
+        console.log("URL" + fullUrl);
         const response = await fetch(fullUrl);
 
         if (!response.ok) {

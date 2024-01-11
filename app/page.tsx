@@ -1,4 +1,3 @@
-import Chart from "@/components/Chart";
 import Dashboard from "@/components/Dashboard";
 import Navbar from "@/components/Navbar";
 
