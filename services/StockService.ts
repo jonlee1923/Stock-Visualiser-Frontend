@@ -8,6 +8,7 @@ export const getAggregateData = async (
     request: AggregateRequest
 ): Promise<AggregateResponse[]> => {
     try {
+        console.log("hi")
         const queryParams = new URLSearchParams({
             symbol: request.symbol,
             timespan: request.timespan,
@@ -16,6 +17,7 @@ export const getAggregateData = async (
         });
 
         const fullUrl = `${baseUrl + aggEndpoint}?${queryParams.toString()}`;
+        console.log(fullUrl);
         const response = await fetch(fullUrl);
 
         if (!response.ok) {

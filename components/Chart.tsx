@@ -5,48 +5,35 @@ import {
     Area,
     XAxis,
     YAxis,
-    CartesianGrid,
     Tooltip,
     ResponsiveContainer,
     Legend,
 } from "recharts";
 import { useState, useEffect } from "react";
-import { getAggregateData } from "@/services/StockService";
 import { AggregateResponse } from "@/types";
+import Filter from "./Filter";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
+import Overlay from "./utils/Overlay";
 
 const Chart = () => {
-    const [aggregateData, setAggregateData] = useState<AggregateResponse[]>([]);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
-
-    const symbol = "AAPL";
-    const timespan = "DAY";
-    const from = "2024-01-02";
-    const to = "2024-01-04";
-
-    const fetchData = async () => {
-        try {
-            setLoading(true);
-            const response = await getAggregateData({
-                symbol,
-                timespan,
-                from,
-                to,
-            });
-            setAggregateData(response);
-        } catch (error) {
-            setError(`Error fetching data: ${(error as Error).message}`);
-        } finally {
-            setLoading(false);
-        }
-    };
-    useEffect(() => {
-        fetchData();
-    }, []);
+    const aggregateData: AggregateResponse[] = useSelector(
+        (state: RootState) => state.tickerDetails.aggregateData
+    );
 
     return (
-        <div className="w-7/8 h-full border-black text-cyan-500">
-            <ResponsiveContainer >
+        <div className="w-7/8 h-full border-2 border-indigo-500/75 rounded-lg shadow-lg p-10 mx-2">
+            <Filter />
+            {aggregateData.length === 0 && (
+                <div className="relative">
+                    <div className="absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20">
+                        <div className="border-2 rounded-md flex p-2">
+                            Search a stock symbol to begin!
+                        </div>
+                    </div>
+                </div>
+            )}
+            <ResponsiveContainer>
                 <AreaChart
                     data={aggregateData}
                     // margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
@@ -77,12 +64,8 @@ const Chart = () => {
                             />
                         </linearGradient>
                     </defs>
-                    <XAxis
-                        dataKey="t"
-                    />
-                    <YAxis
-                        domain={["dataMin", "dataMax"]}
-                    />
+                    <XAxis dataKey="t" />
+                    <YAxis domain={["dataMin", "dataMax"]} />
                     <Tooltip />
                     <Area
                         type="monotone"
@@ -98,7 +81,7 @@ const Chart = () => {
                         fillOpacity={1}
                         fill="url(#close)"
                     />
-                    <Legend/>
+                    <Legend />
                 </AreaChart>
             </ResponsiveContainer>
         </div>

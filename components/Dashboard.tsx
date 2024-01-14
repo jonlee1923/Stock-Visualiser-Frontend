@@ -5,7 +5,7 @@ import Overview from "./Overview";
 
 const Dashboard = () => {
     return (
-        <div className="h-screen grid grid-cols-3 grid-rows-5 auto-rows-fr">
+        <div className="h-screen grid grid-cols-3 grid-rows-5 auto-rows-fr gap-2">
             <div className="col-span-2 row-span-4">
                 <Chart />
             </div>
