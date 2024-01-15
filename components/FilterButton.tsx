@@ -1,4 +1,3 @@
-import { ChartFilter } from "@/constants";
 import React from "react";
 
 interface FilterButtonProps {
@@ -13,7 +12,6 @@ const FilterButton = (props: FilterButtonProps) => {
         <div>
             <button
                 onClick={()=> {
-                    console.log("Filter " + props.filter);
                     props.onClick(props.filter)
                 }}
                 className={`w-12 m-2 h-8 border-3 border-indigo-700 rounded-md flex items-center justify-center cursor-pointer ${

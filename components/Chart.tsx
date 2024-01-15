@@ -22,12 +22,12 @@ const Chart = () => {
     );
 
     return (
-        <div className="w-7/8 h-full border-2 border-indigo-500/75 rounded-lg shadow-lg p-10 mx-2">
+        <div className="w-7/8 h-full border-2 border-indigo-500/75 rounded-lg shadow-lg p-10 mx-8">
             <Filter />
             {aggregateData.length === 0 && (
                 <div className="relative">
-                    <div className="absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20">
-                        <div className="border-2 rounded-md flex p-2">
+                    <div className="absolute z-20">
+                        <div className="border-2 rounded-md flex p-2 translate-x-1/2">
                             Search a stock symbol to begin!
                         </div>
                     </div>
@@ -36,7 +36,6 @@ const Chart = () => {
             <ResponsiveContainer>
                 <AreaChart
                     data={aggregateData}
-                    // margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
                 >
                     <defs>
                         <linearGradient id="open" x1="0" y1="0" x2="0" y2="1">

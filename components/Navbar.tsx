@@ -9,30 +9,39 @@ import {
 } from "../store/features/historicalData/historicalDataSlice";
 import { AggregateResponse, TickerResponse } from "@/types";
 import { RootState } from "@/store/store";
+import toast from "react-hot-toast";
 
 const Navbar = () => {
     const [symbol, setSymbol] = useState<string>("");
     const chartFilterTimespan: string = useSelector(
         (state: RootState) => state.tickerDetails.filterTimespan
     );
-    const dispatch = useDispatch();
+
     const from = "2024-01-02";
     const to = "2024-01-04";
+    const dispatch = useDispatch();
 
     const fetchData = async () => {
-        console.log("entered function")
+        console.log("Called");
         const data: TickerResponse[] = await getTickerData({ symbol });
-        console.log("after details")
         const response: AggregateResponse[] = await getAggregateData({
             symbol,
             timespan: chartFilterTimespan,
             from,
             to,
         });
-        console.log("after fucntion calls")
         dispatch(setDetails(data[0]));
         dispatch(setAggData(response));
     };
+
+    const callFunction = fetchData;
+
+    const notify = () =>
+        toast.promise(callFunction(), {
+            loading: "Fetching data...",
+            success: <b>Data fetched!</b>,
+            error: <b>Could not fetch...</b>,
+        });
 
     const onChangeHandler = (event: {
         target: { value: React.SetStateAction<string> };
@@ -53,7 +62,7 @@ const Navbar = () => {
                             value={symbol}
                         />
                         <button
-                            onClick={fetchData}
+                            onClick={notify}
                             type="submit"
                             className="flex-none rounded-md bg-indigo-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
                         >
