@@ -1,64 +1,21 @@
 "use client";
-import Link from "next/link";
 import React, { useState } from "react";
-import { getAggregateData, getTickerData } from "@/services/StockService";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
-    setDetails,
-    setAggData,
     setSymbol
 } from "../store/features/historicalData/historicalDataSlice";
-import { AggregateResponse, TickerResponse } from "@/types";
-import { RootState } from "@/store/store";
 import toast from "react-hot-toast";
-import { useGetAggregateDataQuery } from "@/store/features/api/apiSlice";
 
 const Navbar = () => {
     const [tempSymbol, setTempSymbol] = useState<string>("");
-    // const { 
-    //     // data,
-    //     error, 
-    //     isLoading,
-    //     refetch
-    //      } = useGetAggregateDataQuery(
-    //     {
-    //         symbol,
-    //         timespan,
-    //         from,
-    //         to,
-    //     },
-    //     { skip }
-    // );
-
     const dispatch = useDispatch();
-
-    const fetchData = async () => {
-        // console.log("after return val");
-        const tickerDetailsData: TickerResponse[] = await getTickerData({
-            symbol:tempSymbol,
-        });
-
-        // refetch();
-        // const response: AggregateResponse[] = await getAggregateData({
-        //     symbol,
-        //     timespan: chartFilterTimespan,
-        //     from,
-        //     to,
-        // });
+    const dispatchSymbol = () => {
+        if(tempSymbol == ""){
+            toast.error("Invalid symbol...")
+            return
+        }
         dispatch(setSymbol(tempSymbol.toUpperCase()))
-        dispatch(setDetails(tickerDetailsData[0]));
-        // dispatch(setAggData(data));
     };
-
-    const callFunction = fetchData;
-
-    const notify = () =>
-        toast.promise(callFunction(), {
-            loading: "Fetching data...",
-            success: <b>Data fetched!</b>,
-            error: <b>Could not fetch...</b>,
-        });
-
     const onChangeHandler = (event: {
         target: { value: React.SetStateAction<string> };
     }) => {
@@ -78,7 +35,7 @@ const Navbar = () => {
                             value={tempSymbol}
                         />
                         <button
-                            onClick={notify}
+                            onClick={dispatchSymbol}
                             type="submit"
                             className="flex-none rounded-md bg-indigo-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
                         >

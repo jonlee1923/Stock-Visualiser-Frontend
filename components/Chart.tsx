@@ -15,8 +15,10 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { useGetAggregateDataQuery } from "@/store/features/api/apiSlice";
 import { BarLoader } from "react-spinners";
+import toast from "react-hot-toast";
 
 const Chart = () => {
+    const [toastId, setToastId] = useState<string|null>(null);
     const [skip, setSkip] = useState(true);
     const aggregateData: AggregateResponse[] = useSelector(
         (state: RootState) => state.tickerDetails.aggregateData
@@ -34,30 +36,30 @@ const Chart = () => {
         else setSkip(true);
     }, [symbol]);
 
-    const { data, isLoading } = useGetAggregateDataQuery(
+    const { data, isLoading, isSuccess, isError } = useGetAggregateDataQuery(
         { symbol, timespan, from, to }
         // { skip }
     );
-
+    if (isLoading && toastId === null) {
+        setToastId(toast.loading("Loading..."))
+        console.log(toastId);
+    }
+    if (isSuccess && toastId) toast.success("Data fetched :)", { id: toastId });
+    else if(isError && toastId) toast.error("Error :(", { id: toastId });
 
     return (
         <div className="w-7/8 h-full border-2 border-indigo-500/75 rounded-lg shadow-lg p-10 mx-8">
             <Filter />
-            {data == undefined &&
-                (
-                    <div className="flex justify-center items-center h-full">
-                        Search a symbol to get get started!!!
-                    </div>
-                )
-            }
-            {
-                isLoading && 
-                (
-                    <div>
-                        <BarLoader color="#36d7b7" />
-                    </div>
-                )
-            }
+            {data == undefined && (
+                <div className="flex justify-center items-center h-full">
+                    Search a symbol to get get started!!!
+                </div>
+            )}
+            {isLoading && (
+                <div>
+                    <BarLoader color="#36d7b7" />
+                </div>
+            )}
             {data != undefined && (
                 <ResponsiveContainer>
                     <AreaChart data={data}>
