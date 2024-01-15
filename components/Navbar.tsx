@@ -6,32 +6,48 @@ import { useDispatch, useSelector } from "react-redux";
 import {
     setDetails,
     setAggData,
+    setSymbol
 } from "../store/features/historicalData/historicalDataSlice";
 import { AggregateResponse, TickerResponse } from "@/types";
 import { RootState } from "@/store/store";
 import toast from "react-hot-toast";
+import { useGetAggregateDataQuery } from "@/store/features/api/apiSlice";
 
 const Navbar = () => {
-    const [symbol, setSymbol] = useState<string>("");
-    const chartFilterTimespan: string = useSelector(
-        (state: RootState) => state.tickerDetails.filterTimespan
-    );
+    const [tempSymbol, setTempSymbol] = useState<string>("");
+    // const { 
+    //     // data,
+    //     error, 
+    //     isLoading,
+    //     refetch
+    //      } = useGetAggregateDataQuery(
+    //     {
+    //         symbol,
+    //         timespan,
+    //         from,
+    //         to,
+    //     },
+    //     { skip }
+    // );
 
-    const from = "2024-01-02";
-    const to = "2024-01-04";
     const dispatch = useDispatch();
 
     const fetchData = async () => {
-        console.log("Called");
-        const data: TickerResponse[] = await getTickerData({ symbol });
-        const response: AggregateResponse[] = await getAggregateData({
-            symbol,
-            timespan: chartFilterTimespan,
-            from,
-            to,
+        // console.log("after return val");
+        const tickerDetailsData: TickerResponse[] = await getTickerData({
+            symbol:tempSymbol,
         });
-        dispatch(setDetails(data[0]));
-        dispatch(setAggData(response));
+
+        // refetch();
+        // const response: AggregateResponse[] = await getAggregateData({
+        //     symbol,
+        //     timespan: chartFilterTimespan,
+        //     from,
+        //     to,
+        // });
+        dispatch(setSymbol(tempSymbol.toUpperCase()))
+        dispatch(setDetails(tickerDetailsData[0]));
+        // dispatch(setAggData(data));
     };
 
     const callFunction = fetchData;
@@ -46,7 +62,7 @@ const Navbar = () => {
     const onChangeHandler = (event: {
         target: { value: React.SetStateAction<string> };
     }) => {
-        setSymbol(event.target.value);
+        setTempSymbol(event.target.value);
     };
 
     return (
@@ -55,11 +71,11 @@ const Navbar = () => {
                 <nav>
                     <div className="mt-6 flex max-w-md gap-x-4">
                         <input
-                            className="min-w-0 flex-auto rounded-md border-2 border-indigo-500/75 bg-white/5 px-3.5 py-2 text-black shadow-sm hover:border-indigo-200/75 active:border-indigo-200"
+                            className="uppercase min-w-0 flex-auto rounded-md border-2 border-indigo-500/75 bg-white/5 px-3.5 py-2 text-black shadow-sm hover:border-indigo-200/75 active:border-indigo-200"
                             placeholder="Search for a stock..."
                             type="text"
                             onChange={onChangeHandler}
-                            value={symbol}
+                            value={tempSymbol}
                         />
                         <button
                             onClick={notify}

@@ -8,7 +8,6 @@ export const getAggregateData = async (
     request: AggregateRequest
 ): Promise<AggregateResponse[]> => {
     try {
-        console.log("hi")
         const queryParams = new URLSearchParams({
             symbol: request.symbol,
             timespan: request.timespan,

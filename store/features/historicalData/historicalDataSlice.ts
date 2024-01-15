@@ -8,6 +8,7 @@ export interface TickerDetailsSlice {
     details: TickerResponse;
     filterTimespan: string;
     filterDateRange: FilterDateRange;
+    symbol: string;
     aggregateData: AggregateResponse[];
 }
 
@@ -36,6 +37,7 @@ const initialState: TickerDetailsSlice = {
         from: Date.now().toLocaleString(),
         to: Date.now().toLocaleString(),
     },
+    symbol: "",
     aggregateData:[]
 };
 
@@ -54,11 +56,14 @@ export const tickerDetailsSlice = createSlice({
         },
         setAggData: (state, action: PayloadAction<AggregateResponse[]>) =>{
             state.aggregateData = action.payload;
+        },
+        setSymbol: (state, action: PayloadAction<string>) =>{
+            state.symbol = action.payload;
         }
     },
 });
 
 // Action creators are generated for each case reducer function
-export const { setDetails, setFilter, setDateRange, setAggData } = tickerDetailsSlice.actions;
+export const { setDetails, setFilter, setDateRange, setAggData, setSymbol } = tickerDetailsSlice.actions;
 
 export default tickerDetailsSlice.reducer;
