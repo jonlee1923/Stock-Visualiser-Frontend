@@ -6,7 +6,7 @@ export default function Home() {
             // bg-gradient-to-r from-slate-500 to-slate-300
 
     return (
-        <main className="flex-col min-h-screen min-w-screen">
+        <main className="flex-col min-h-screen min-w-screen bg-gray-900 text-white">
             <div><Toaster/></div>
             <Navbar />
             <Dashboard />

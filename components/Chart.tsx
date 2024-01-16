@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
     AreaChart,
     Area,
@@ -11,15 +11,21 @@ import {
 } from "recharts";
 import { AggregateResponse } from "@/types";
 import Filter from "./Filter";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { useGetAggregateDataQuery } from "@/store/features/api/apiSlice";
 import { BarLoader } from "react-spinners";
 import toast from "react-hot-toast";
+import {
+    FilterDateRange,
+    setAggData,
+} from "@/store/features/historicalData/historicalDataSlice";
+import DatePicker from "./DatePicker";
 
 const Chart = () => {
-    const [toastId, setToastId] = useState<string|null>(null);
+    const [toastId, setToastId] = useState<string | null>(null);
     const [skip, setSkip] = useState(true);
+
     const aggregateData: AggregateResponse[] = useSelector(
         (state: RootState) => state.tickerDetails.aggregateData
     );
@@ -29,27 +35,39 @@ const Chart = () => {
     const symbol: string = useSelector(
         (state: RootState) => state.tickerDetails.symbol
     );
-    const from = "2024-01-02";
-    const to = "2024-01-04";
+    const dateRange: FilterDateRange = useSelector(
+        (state: RootState) => state.tickerDetails.filterDateRange
+    );
+
+    const dispatch = useDispatch();
     useEffect(() => {
         if (symbol == "") setSkip(true);
         else setSkip(true);
     }, [symbol]);
 
     const { data, isLoading, isSuccess, isError } = useGetAggregateDataQuery(
-        { symbol, timespan, from, to }
+        { symbol, timespan, from: dateRange.from, to: dateRange.to }
         // { skip }
     );
+
+    useEffect(() => {
+        if (!data) return;
+        dispatch(setAggData(data));
+    }, [data]);
+
     if (isLoading && toastId === null) {
-        setToastId(toast.loading("Loading..."))
+        setToastId(toast.loading("Loading..."));
         console.log(toastId);
     }
     if (isSuccess && toastId) toast.success("Data fetched :)", { id: toastId });
-    else if(isError && toastId) toast.error("Error :(", { id: toastId });
+    else if (isError && toastId) toast.error("Error :(", { id: toastId });
 
     return (
-        <div className="w-7/8 h-full border-2 border-indigo-500/75 rounded-lg shadow-lg p-10 mx-8">
-            <Filter />
+        <div className="w-7/8 h-full border-2 border-zinc-600 rounded-lg shadow-lg p-10 mx-8">
+            <div className="flex justify-between items-center">
+                <Filter />
+                <DatePicker />
+            </div>
             {data == undefined && (
                 <div className="flex justify-center items-center h-full">
                     Search a symbol to get get started!!!
@@ -62,7 +80,7 @@ const Chart = () => {
             )}
             {data != undefined && (
                 <ResponsiveContainer>
-                    <AreaChart data={data}>
+                    <AreaChart data={aggregateData}>
                         <defs>
                             <linearGradient
                                 id="open"

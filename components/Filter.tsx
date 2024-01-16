@@ -14,7 +14,6 @@ const Filter = () => {
         "YEAR": "Y",
         "MONTH": "M",
         "WEEK": "W",
-        "HOUR": "H",
         "DAY": "D"
     }
 

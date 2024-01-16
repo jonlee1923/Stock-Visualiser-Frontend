@@ -3,6 +3,7 @@ import { TickerResponse } from "@/types";
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { AggregateResponse } from "@/types";
+import { StringToDateAggData } from "@/utils";
 
 export interface TickerDetailsSlice {
     details: TickerResponse;
@@ -55,7 +56,9 @@ export const tickerDetailsSlice = createSlice({
             state.filterDateRange = action.payload;
         },
         setAggData: (state, action: PayloadAction<AggregateResponse[]>) =>{
-            state.aggregateData = action.payload;
+            let formattedData = StringToDateAggData(action.payload);
+            console.log(formattedData);
+            state.aggregateData = formattedData;
         },
         setSymbol: (state, action: PayloadAction<string>) =>{
             state.symbol = action.payload;

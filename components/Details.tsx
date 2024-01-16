@@ -16,7 +16,7 @@ const Details = () => {
     const { data, isLoading } = useGetTickerDetailsQuery({ symbol });
 
     return (
-        <div className="flex border-2 border-indigo-500/75 rounded-lg shadow-lg p-10 mx-2">
+        <div className="flex border-2 border-zinc-600 rounded-lg shadow-lg p-10 mx-2">
             {isLoading && <BarLoader color="#36d7b7" />}
             {data != undefined && (
                 <ul className="w-full h-full flex flex-col justify-between divide-y-1">
