@@ -22,7 +22,7 @@ const Navbar = () => {
     };
 
     return (
-        <header className="py-6 md:px-16 px-6 z-30 my-6 bg-gradient-to-tl from-gray-900 from-40% via-gray-900 via-50% to-indigo-800 to-60%">
+        <header className="py-6 md:px-16 px-6 z-30 mb-6 bg-gradient-to-tl from-gray-900 from-40% via-gray-900 via-50% to-indigo-800 to-60%">
             <div className="w-2/5 flex space-between ">
                 <nav>
                     <div className="mt-6 flex max-w-md gap-x-4">
